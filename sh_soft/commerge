@@ -1,0 +1,188 @@
+#!/bin/bash
+####commerge 用于合并文件或者是转换文件格式
+
+##debug
+#set -x  #直接输出每次执行的命令
+#set -e  #程序异常结束时候，输出错误。
+
+##获取输入文件
+Author="Mol Chai"
+Version="V0.01"
+Builddate="2020-09-16"
+Email="chaimol@163.com"
+Github="https://www.github.com/chaimol/"
+<<!
+if [ "$#" -eq 0 ] ;then
+	echo "请输入参数"
+elif [ "$#" -eq 1 ] ;then
+	echo "for help info"
+else
+	echo "输入参数大于1"
+fi
+if [ -n "$1" ]; then
+    echo "包含第一个参数"
+else
+    echo "没有包含第一参数"
+fi
+!
+
+
+fileA="$2"
+fileB="$1"
+
+##转换文件格式模块
+##csv2tab
+function csv2tab(){
+	cat $1|tr "," "\t" > $2
+	if [ $? -eq 0 ];then return 0;else return 1;fi
+	#如果报错，则返回1，正确返回0.
+}
+
+##tab2csv
+function tab2csv(){
+	cat $1|tr "\t" "," > $2
+	if [ $? -eq 0 ];then return 0;else return 1;fi
+}
+
+
+##数据排序,去重复模块
+function sortfile(){
+
+	##注意函数中的$1,是针对运行该函数后，跟的第一个参数。不是全局的第一个参数。
+	kn=1         #设置默认的排序行为第1行
+	tn=","      #设置默认的分割符为逗号
+	if ! [ `expr "$#" % 2` -eq 0 ];                  #判断输入的参数是否能被2整除，能则代表参数正确
+	then
+		echo "参数数量不对！请核对！"
+		return 1
+	else
+
+		for i in $@;
+		do
+			case $i in
+			-k)
+			kn="$2"  #此处$2是-k参数后的值
+			#echo "kn 的值 ${kn}"
+			shift
+			shift
+			;;
+			-t)
+			tn="$2"
+			#echo " tn 的值是 ${tn}"
+			shift
+			shift
+			;;
+			esac
+		done
+			echo $1 $2
+			cat $1|sort -n -t ${tn} -u -k${kn} >$2
+			if [ $? -eq 0 ];then return 0;else return 1;fi
+	fi 
+}
+
+
+##数据合并模块
+function joinfile(){
+			join $*
+			if [ $? -eq 0 ];then return 0;else return 1;fi
+}
+
+
+
+##判断用户输入的第一个参数
+
+#如果用户
+#-h 帮助信息
+#-V 版本信息
+case $1 in
+  -h | -help) 
+  echo -e "Usage \n
+  -h help;\n
+  -fileA fileA \n
+  -fileB fileB \n
+  -o filename ； mean output filename \n
+  -V or -version version info \n
+  csv2tab inputcsv outputname \n
+  tab2csv inputtab outputname \n
+  sort -t separator -k column_number inputfile outputname   
+  #note if your inputfile's  separator is not right with the  -t separator,the outputfile  data will be wrong,but there donot have alert or warning! \n
+  #warning:this is sort and uniq ,also delete the same line when sort the file.
+  join csv1 csv2  
+"
+  ;;
+  -V | -version) 
+	  echo -e "
+	  Version:${Version}\n
+	  Author:${Author} \n
+	  Email:${Email} \n
+	  Github:${Github} \n
+	  Builddate:${Builddate}
+	  "
+	  ;;
+  csv2tab) 
+  csv2tab $2 $3
+	  if [ $? -eq 0 ];
+	  then
+		echo "success！"
+	  elif ! [ -n "$3" ];
+	  then
+		echo "please add the output filename!"
+	  else
+		echo "Please check your input info ,exchange file not success"
+	  fi
+	  ;;
+  tab2csv) 
+	  tab2csv $2 $3 
+	  if [ $? -eq 0 ];                  #判断函数运行返回值，等于0，则成功，不等于0，则检查用户的输入，告知错误原因！
+	  then
+		echo "success!"
+	  elif ! [ -n "$3" ];
+	  then
+		echo "please add the output filename!"
+	  else
+		echo "Please check your input info ,exchange file not success"
+	  fi
+		;;
+  sort)
+	  shift   #使用shift，相当于把用户的输入往前提了一个，即把原本的$1删除了，现在的$*里面也不包含原来的$1。
+	  sortfile $*
+	  if [ $? -eq 0 ];                  #判断函数运行返回值，等于0，则成功，不等于0，则检查用户的输入，告知错误原因！
+	  then
+		echo "success!"
+	  else
+		echo "sort not success!"
+	  fi
+	  ;;
+	join)
+	  shift
+	  joinfile $*
+	  if [ $? -eq 0 ];                  #判断函数运行返回值，等于0，则成功，不等于0，则检查用户的输入，告知错误原因！
+	  then
+		echo "success!"
+	  else
+		echo "join not success!"
+	  fi
+	  ;;
+		*)
+	  echo "input info is wrong,please test input -h find the help info!"
+	  ;;
+esac
+
+
+##判断是否排序，未排序的就排序
+#sort
+
+###合并文件
+
+
+#join 
+<<!
+if [ -e $filename ];
+then
+{
+	echo "文件存在！"
+}
+fi
+
+
+!
