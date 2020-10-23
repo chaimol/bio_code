@@ -8,3 +8,6 @@
 
 ##### Create Date:2020/10/10
 
+##### `chr`  useages for extract bam or add/delete chr from bam.
+
+##### `commerge` usages for test shell code skills.

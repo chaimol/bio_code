@@ -1,0 +1,129 @@
+#!/bin/bash
+##依赖samtools，请先安装并配置环境变量。程序用于对bam文件进行chr的增删，指定染色体或染色体某个区域提取bam文件
+###chr -h 查看帮助
+Author="Mol Chai"
+Version="V1"
+Builddate="2020-10-23"
+Email="chaimol@163.com"
+Github="https://www.github.com/chaimol/"
+#### 用于添加bam文件的染色体的chr
+function addchr(){
+	samtools view -H $1 | sed -e 's/SN:\([0-9XY]\)/SN:chr\1/' -e 's/SN:MT/SN:chrM/' | samtools reheader - $1 > $2
+}
+##删除bam文件的染色体的chr
+function rmchr(){
+	samtools view -H $1 | sed -e 's/SN:chr*/SN:/' | samtools reheader - $1 > $2
+}
+##删除普通文件(vcf或txt)的染色体chr
+function rmchrN(){
+	cat $1 | sed -e 's/chr//g' >$2
+}
+
+
+
+##提取指定染色体的bam文件
+function getchr(){
+	samtools view -b -h $1 $2 |  samtools sort - > $3 
+}
+
+
+##提取指定区间的bam文件
+function getregion(){
+		samtools view -h $1 $2 | samtools sort - > $3 
+}
+#samtools view -b -h RH615.PAF04899.pass.bam 10 | samtools sort -  >10.RH615.PAF04899.sort.bam
+#samtools view -h  control_1.sort.bam   "chr17:40437407-40486397"  |samtools view -bS - >RNA-seq.bam
+#samtools view -H chr10.RH615.PAF04899.sorted.bam | sed -e 's/SN:\([0-9XY]\)/SN:chr\1/' -e 's/SN:MT/SN:chrM/' | samtools reheader - test.bam > test.CHR.bam
+#samtools view -H chr10.RH615.PAF04899.sorted.bam | sed -e 's/SN:chr*/SN:/' | samtools reheader - test.bam > test.CHR.bam
+
+
+#-h 帮助信息
+
+case $1 in
+  -h | -help) 
+  echo -e "Usage (require samtools)\n
+  -h help;\n
+  addchr inputbam outputbam \n
+  rmchr inputbam outputbam \n
+  getchr inputbam chr10 outputbam 
+  getregion inputbam 10:9993-100023 outputbam
+	
+Notes
+  #  1. require samtools ,please install samtools before run this software.  
+  #  2.the getchr and getregion command's chromosome must be sctrict same with the reference genome.(chr10 or 10)
+"
+  ;;
+  -V | -version) 
+	  echo -e "
+	  Version:${Version}\n
+	  Author:${Author} \n
+	  Email:${Email} \n
+	  Github:${Github} \n
+	  Builddate:${Builddate}
+	  "
+	  ;;
+  addchr) 
+	  addchr $2 $3
+	  if [ $? -eq 0 ];
+	  then
+		echo "success！"
+	  elif ! [ -n "$3" ];
+	  then
+		echo "please add the output filename!"
+	  else
+		echo "Please check your input info ,exchange file not success"
+	  fi
+	  ;;
+  rmchr) 
+	  rmchr $2 $3 
+	  if [ $? -eq 0 ];                  #判断函数运行返回值，等于0，则成功，不等于0，则检查用户的输入，告知错误原因！
+	  then
+		echo "success!"
+	  elif ! [ -n "$3" ];
+	  then
+		echo "please add the output filename!"
+	  else
+		echo "Please check your input info ,exchange file not success"
+	  fi
+		;;
+	rmchrN)
+		rmchrN $2 $3
+		  if [ $? -eq 0 ];                  #判断函数运行返回值，等于0，则成功，不等于0，则检查用户的输入，告知错误原因！
+		  then
+			echo "success!"
+		  elif ! [ -n "$3" ];
+		  then
+			echo "please add the output filename!"
+		  else
+			echo "Please check your input info ,exchange file not success"
+		  fi
+		;;
+	getchr)
+		getchr $2 $3 $4
+		  if [ $? -eq 0 ];                  #判断函数运行返回值，等于0，则成功，不等于0，则检查用户的输入，告知错误原因！
+		  then
+			echo "success!"
+		  elif ! [ -n "$4" ];
+		  then
+			echo "please add the output filename!"
+		  else
+			echo "Please check your input info ,exchange file not success"
+		  fi
+		;;
+	getregion)
+		getregion $2 $3 $4
+		  if [ $? -eq 0 ];                  #判断函数运行返回值，等于0，则成功，不等于0，则检查用户的输入，告知错误原因！
+		  then
+			echo "success!"
+		  elif ! [ -n "$4" ];
+		  then
+			echo "please add the output filename!"
+		  else
+			echo "Please check your input info ,exchange file not success"
+		  fi
+		;;
+		*)
+	  echo "input info is wrong,please test input -h find the help info!"
+	  ;;
+esac
+
