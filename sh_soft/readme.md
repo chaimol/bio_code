@@ -10,6 +10,7 @@
 
 ##### `chr`  useages for extract bam or add/delete chr from bam.
 
+<<<<<<< HEAD
 ##### `commerge` usages for test shell code skills.
 
 `farename/farename` usages for exchange fasta file head.
@@ -28,3 +29,6 @@ chmod 757 commerge
 ./commerge -h 
 ```
 
+=======
+##### `commerge` usages for test shell code skills.
+>>>>>>> b838ca1ebc2fba0a7903b6cd8fd4a84e966174fa
