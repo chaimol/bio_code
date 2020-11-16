@@ -1,0 +1,20 @@
+pathdir=$1
+
+case $1 in
+	-h|-help)
+	echo "Usage 
+	path software dir 
+	example: 
+	pathadd ~/software/bin 
+	"
+	;;
+	*)
+	if [ -d "$1" ];then
+		echo 'export PATH='"${pathdir}"':$PATH' >>~/.bashrc
+		source ~/.bashrc
+	else
+		echo "please input a dir path!"
+	fi
+	;;
+esac
+

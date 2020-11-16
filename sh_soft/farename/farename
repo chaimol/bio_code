@@ -1,0 +1,157 @@
+#!/bin/bash
+#farename 主要是对fa文件进行重命名。
+
+##debug
+#set -x  #直接输出每次执行的命令
+#set -e  #程序异常结束时候，输出错误。
+
+##获取输入文件
+Author="Mol Chai"
+Version="V0.01"
+Builddate="2020-11-13"
+Email="chaimol@163.com"
+Github="https://www.github.com/chaimol/"
+
+
+
+#模式：指定重命名文件
+
+function filen(){
+		inputfa=$1
+		newfa=$2
+		outputfa=$3
+		len1=`sed -n '/>/=' ${inputfa}|wc -l`
+		len2=`sed -n '/>/=' ${newfa}|wc -l`
+		if ! [ $len1 -eq $len2 ];
+		then
+			#确保新旧两个fa的头部的行数一致
+			echo "please make sure the same number of two fa head rows "
+			return 1
+			exit
+		fi
+		
+		#获取>开头的行号，下面是行号的长字符串转化为数组。
+		len1_list=`sed -n '/>/=' ${inputfa}`
+		arr=($len1_list)
+		for i in "${!arr[@]}"; do
+			echo "$i=>${arr[i]}"
+		done
+
+		#检测是否存在该文件，如果有，则自动删除旧版本
+		if [ -e $outputfa ]; then
+			echo "已存在输出文件 ${outputfa},自动删除旧版本。"
+			rm -rf $outputfa
+		fi
+
+		#获取输入文件行数中fa头的行数len1，使用arr数组里存放的是原始fa的对应的行号，下标是从0开始，而new_line_str是获取的新的fa的第i行的内容
+		for((i=1;i<=${len1};i++));do
+			new_line_str=`sed -n "${i}p" ${newfa}`
+			inLines=${arr[${i}-1]} #原始fa head的行号
+			inLines2=$(($inLines + 1)) #行号+1
+			#每次提取一个head和其后行的序列，重定向到输出文件
+			comma="cat $inputfa | sed -n '$inLines,${inLines2}p' | sed '1c ${new_line_str}' >> ${outputfa}"
+			eval $comma
+			#上述命令需要二次转译，故使用eval。
+		done
+}
+
+#模式：指定重命名的前缀
+
+function pre_head(){
+		inputfa=$1
+		header=$2
+		outputfa=$3
+		len1=`sed -n '/>/=' ${inputfa}|wc -l`
+		
+		#获取>开头的行号，下面是行号的长字符串转化为数组。
+		len1_list=`sed -n '/>/=' ${inputfa}`
+		arr=($len1_list)
+		for i in "${!arr[@]}"; do
+			echo "$i=>${arr[i]}"
+		done
+		
+		
+		#检测是否存在该文件，如果有，则自动删除旧版本
+		if [ -e $outputfa ]; then
+			echo "已存在输出文件 ${outputfa},自动删除旧版本。" 
+			rm -rf $outputfa
+		fi
+		
+		#获取输入文件行数中fa头的行数len1，使用array数组里存放的是原始fa的对应的行号，下标是从0开始，而new_line_str是获取的新的fa的第i行的内容
+		for((i=1;i<=${len1};i++));do
+			#上述命令需要二次转译，故下面又执行一次。
+			inLines=${arr[${i}-1]} #原始fa head的行号
+			inLines2=$(($inLines + 1)) #行号+1
+			#每次提取一个head和其后行的序列，重定向到输出文件
+			comma="cat $inputfa | sed -n '$inLines,${inLines2}p' | sed '1c \>${header}${i}' >> ${outputfa}"
+			eval $comma
+			#上述命令需要二次转译，故使用eval。
+		done
+}
+
+
+
+#模式：指定重命名前缀
+
+
+case $1 in
+	-h|--help)
+echo -e "Usage \n
+purpose:for exchange fasta file head. \n
+   -h help;\n
+   -f |filen inputfa new_head_file outputfa \n
+   -p |pre_head inputfa pre_head outputfa  \n
+   -V | --version Version & Author info. \n
+	
+Example
+  
+  # use a new head file
+  farename -f demo.fa demo_new_head.fa demo.new.fa
+  farename filen demo.fa demo_new_head.fa demo.new.fa
+  
+  # use a prefix string and number
+  farename -p hg19.fa GRch37 hg19.new.fa
+  farename pre hg19.fa GRch37 hg19.new.fa 
+  
+  
+Note:
+Please make sure your new fa file head rows count same as the input fa file head.   
+"
+		;;
+	filen | -f)
+		filen $2 $3 $4
+		  if [ $? -eq 0 ];                  #判断函数运行返回值，等于0，则成功，不等于0，则检查用户的输入，告知错误原因！
+		  then
+			echo "success!"
+		  elif ! [ -n "$4" ];
+		  then
+			echo "please add the output filename!"
+		  else
+			echo "Please check your input info ,exchange file not success"
+		  fi
+		;;
+	pre | -p)
+		pre_head $2 $3 $4
+		  if [ $? -eq 0 ];                  #判断函数运行返回值，等于0，则成功，不等于0，则检查用户的输入，告知错误原因！
+		  then
+			echo "success!"
+		  elif ! [ -n "$4" ];
+		  then
+			echo "please add the output filename!"
+		  else
+			echo "Please check your input info ,exchange file not success"
+		  fi
+		;;
+		-V | --version)
+				  echo -e "
+		  Version:${Version}\n
+		  Author:${Author} \n
+		  Email:${Email} \n
+		  Github:${Github} \n
+		  Builddate:${Builddate}
+		  "
+		  ;;
+		*)
+	  echo "Input info is wrong,please test input -h or --help for the help info!"
+	  ;;
+esac	  

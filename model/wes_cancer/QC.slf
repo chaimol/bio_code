@@ -1,0 +1,12 @@
+#BSUB -L /bin/bash
+#BSUB -J QC
+#BSUB -n 16
+#BSUB -o QC.out
+#BSUB -e QC.err
+
+echo start time is `date` | tee -a QC.log
+cd /share/home/chaimao1/wes_cancer/project/
+# run the application
+mpirun ./QC.sh
+echo end time is `date` | tee -a QC.log
+#SLF任务管理系统
