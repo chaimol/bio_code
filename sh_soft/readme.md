@@ -14,6 +14,7 @@
 
 `farename/farename` usages for exchange fasta file head.
 
+##### `getgene` useages for extract gene from gtf/vcf file.
 
 
 
