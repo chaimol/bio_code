@@ -17,4 +17,11 @@ for exchange fasta file head. can be use a new head fasta file or a prefix head.
 `./farename -p demo.fa GRCh19 output.fa`
 
 
+___
+
+# `farehead.sh` is a other method for exchange fasta head.
+##### demo2
+`bash ./farehead.sh demo2.fa`
+
+
 
