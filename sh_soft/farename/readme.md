@@ -24,4 +24,7 @@ ___
 `bash ./farehead.sh demo2.fa`
 
 
-
+————
+# farename.py is base on python3.
+use `python3 farename.py -h` find the help.
+`farename.py` by Biopython ,run speed fast than the other tools(farename or farehead.sh).
