@@ -18,7 +18,7 @@ bash Install.sh
 source ~/.bashrc
 ```
 - Step2: Modify the configuration file `config.ini`
-- Step3: `KK4D.sh` for help
+- Step3: `KK4D.sh -h` for help
 
 # Use
 #### for coline analysis
