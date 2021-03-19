@@ -2,7 +2,7 @@
 ####此程序是函数定义脚本。主运行脚本是run.sh
 
 ##读取配置文件
-source config.ini
+#source config.ini
 if [ $group -eq 2 ];then
 	prefix1=${abbr[0]}
 	prefix2=${abbr[1]}
@@ -29,6 +29,14 @@ else
 	key1=${key[0]}
 	type1=${type[0]}
 	chrnum1=${chrnum[0]}
+	prefix2=${abbr[0]}
+	gff3file2=${gff3[0]}
+	latin2=${sample[0]}
+	protein2=${protein[0]}
+	cds2=${cds[0]}
+	key2=${key[0]}
+	type2=${type[0]}
+	chrnum2=${chrnum[0]}
 fi
 
 ##获取输入文件
@@ -183,7 +191,7 @@ function prepareResult(){
 		esac
 	fi
 	echo ${thread:=32} >proc
-	cat ${abbr1}.${abbr2}.anchors|grep -v ^# >${abbr1}_${abbr2}.homolog
+	cat ${abbr1}.${abbr2}.anchors|grep -v ^#|cut -f 1-2 >${abbr1}_${abbr2}.homolog
 	cat ${abbr1}.cds ${abbr2}.cds >${abbr1}_${abbr2}.cds
 	cat ${abbr1}.pep ${abbr2}.pep >${abbr1}_${abbr2}.pep
 	#此程序需要依赖较多
@@ -234,7 +242,7 @@ function get4DTv(){
 	#使用calculate_4DTV_correction.pl脚本计算4dtv值
 	find ${abbr1}_${abbr2}.result_dir -name "*.axt.one-line"|while read id;do calculate_4DTV_correction.pl $id >${id%%one-line}4dtv;done
 	#合并所有同源基因对的4dtv
-	find ${abbr1}_${abbr2}.result_dir "*.4dtv" |xargs cat| cut -f 1,3| grep -v '4dtv_raw'|sort|uniq >${abbr1}_${abbr2}.all-4dtv.results
+	find ${abbr1}_${abbr2}.result_dir -name "*.4dtv" |xargs cat| cut -f 1,3| grep -v '4dtv_raw'|sort|uniq >${abbr1}_${abbr2}.all-4dtv.results
 	cat ${abbr1}_${abbr2}.all-4dtv.results| sed '1i\Seq\t4dtv_corrected'|tr "\t" "," >${abbr1}_${abbr2}.all-4dtv.csv
 }
 
@@ -260,42 +268,10 @@ function getkaks4DTv(){
 		exit
 	fi
 	#将kaks结果和4Dtv结果合并
-	join -1 1 -2 1 ${abbr1}_${abbr2}.all-kaks.results ${abbr1}_${abbr2}.all-4dtv.results |sed '1i\Seq Ka Ks Ka/Ks 4dtv_corrected' >${abbr1}_${abbr2}.all-results.txt
+	join -a 1 -a 2 -1 1 -2 1 ${abbr1}_${abbr2}.all-4dtv.results ${abbr1}_${abbr2}.all-kaks.results |sed '1i\Seq 4dtv_corrected Ka Ks Ka/Ks' >${abbr1}_${abbr2}.all-results.txt
 	#给结果文件添加标题
 	cat ${abbr1}_${abbr2}.all-results.txt|sed 's/ /,/g'   >${abbr1}_${abbr2}.kaks4DTv.csv
 }
-
-
-
-
-
-#-h 帮助信息
-#-V 版本信息
-case $1 in
-  -h | --help) 
-  echo -e "Usage \n
-  -h  --help;\n
-  -V  --version; \n
-  this file is Function definition script, not running script. Please run the main program. run.sh
-  https://github.com/chaimol/bio_code/blob/master/sh_soft/KaKs_4DTv/axt2one-line.py
-  https://github.com/chaimol/bio_code/blob/master/sh_soft/KaKs_4DTv/calculate_4DTV_correction.pl
-  https://www.jianshu.com/p/6a179eef9cfe
-  require ParaAT.pl mafft kakscalculator2
-"
-  ;;
-  -V | --version) 
-	  echo -e "
-	  Version:${Version}\n
-	  Author:${Author} \n
-	  Email:${Email} \n
-	  Github:${Github} \n
-	  Builddate:${Builddate}
-	  "
-	  ;;
-	  *)
-	  echo "-h/--help for help"
-esac
-
 
 
 
