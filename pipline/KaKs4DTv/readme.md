@@ -18,29 +18,29 @@ bash Install.sh
 source ~/.bashrc
 ```
 - Step2: Modify the configuration file `config.ini`
-- Step3: `run.sh` for help
+- Step3: `KK4D.sh` for help
 
 # Use
 #### for coline analysis
-`run.sh coline`
+`KK4D.sh coline`
 
 #### for kaks calculator
-`run.sh kaks`
+`KK4D.sh kaks`
 
 #### for 4DTv calculator
-`run.sh 4DTV`
+`KK4D.sh 4DTV`
 
 #### from gff3 get bed 
-`run.sh bed`
+`KK4D.sh bed`
 
 #### from gff3 and protein.fa ,get the protein sequence
-`run.sh pep`
+`KK4D.sh pep`
 
 #### from gff3 and cds.fa, get the longest transcript sequence
-`run.sh cds`
+`KK4D.sh cds`
 
 #### from gff3 cds.fa  protein.fa ,get 1 or 2 species all the above information.
-`run.sh all `
+`KK4D.sh all `
 
 # Warning
 Please make sure that the input sequence IDs of cds.fa and protein.fa are the same.

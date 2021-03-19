@@ -6,23 +6,23 @@ cd ${WorkPath} #进入工作路径
 
 
 #判断是否是-h或者-v,加载conda信息比较慢
-if [ -n $1 ] || [ ! $1 == "-h" ] || [ ! $1 == "-V" ];
+if [ $# -lt 1 ] || [[ $1 = "-h" ]] || [[ $1 = "-V" ]] || [ $1 = "--help" ] || [ $1 = "--version" ];
 then
+	echo -e "Welcome use KK4D.sh ! \n"
+else
 	#激活conda环境(shell脚本里，激活conda比较麻烦，需要先source)
 	condapath=`conda info | grep 'base environment'|cut -d : -f2|cut -d " " -f2`
 	source ${condapath}/etc/profile.d/conda.sh
 	conda deactivate
 	conda activate mmdetection
-	
 	#检测用户的输入文件是否存在
-	if [ ! -e $gff3file1 ] || [ ! -e $cds1 ] || [ ! -e $protein1 ];then
-		echo "Please check the input file path or make sure the file is exist !"
-		exit 1
+	if [ -e $gff3file1 ] && [ -e $cds1 ] && [ -e $protein1 ] && [ -e $gff3file2 ] && [ -e $cds2 ] && [ -e $protein2 ];then
+		#echo "Please check the input file path or make sure the file is exist !"
+		echo "Pass the file check !"
+	else
+		echo "May be you are run not from the first step!"
 	fi
 fi
-
-
-
 
 function runbed(){
 	echo "Begin run analysis of bed in `date "+%Y-%m-%d %H:%M:%S"`"
