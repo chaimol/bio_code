@@ -6,9 +6,9 @@ Vcf2Tree is a tool to build a phylogenetic tree using SNP.vcf（or 4DTV.vcf）!
 - **sample.vcf** (The length of the material name grouped in vcf must be <= 10 characters. Characters > 10 will be automatically truncated to 10 characters.)
 (if run 4DTV,the input.vcf must from snpEff!)
 input.vcf must vcf,vcf.gz is not support!
-- **output_prefix**  
+- **output_prefix**  （Only characters can be used, not paths. if use like `./demo/50k` or `demo/50k` will be course a ERROR.）
 - genome.fa (only required when run `4DTv`!)
-# output file
+# Output file (all the output file will be put in run path!This version does not support defining output paths!)
 + -viq ${output}.min4.phy.contree and ${ouput}.min4.phy.treefile
 + -vdp ${output}.cons.vdp.tree
 + -vp ${output}.nei.tree and ${output}.contree
