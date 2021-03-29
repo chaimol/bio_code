@@ -1,0 +1,179 @@
+
+2016-03-16	Version 2.1.5
+ * Added a CLI option (-f) to set the numerical precision outputs
+ * Debugged BioNJ, NJ, UNJ for branch length numerical precision
+
+2015-04-23	Version 2.1.4
+ * Removed as many clang compiler warnings as possible
+   => induced minor rounded differences in distances computation, which have no effect on tree inference
+
+2015-02-10	Version 2.1.3
+ * Outputted distance matrix may contain 'NA' when distance cannot be computed
+ * Harmonized CLI short and long options
+ * Harmonized default values for CLI and PHYLIP interface
+ * Added FLU model
+ * Debugged model assignation for HIVb & HIVw
+ * Improved parallel bootstraps status display
+
+2014-10-28	Version 2.1.2
+ * Added possibility to compute only distance matrix
+ * Removed scoredist routine.
+ * Debugged BioNJ NJ UNJ when bootstrapping
+ * Debugged long float printf format (printf ("%lf")) not supported by Windows.
+ * Added pseudo-counts for stationary probabilities computation for proteins.
+ * Detected problem with TBR procedure, removed from available options.
+
+2014-01-27	Version 2.1.1
+ * Debugged 'calcTN93' in 'distance.c'.
+ * Added RY and F81 models for DNA.
+ * Added Poisson (F81-like), HIVb and HIVw models for proteins.
+
+2013-03-17	Version 2.1.0
+ * Implemented parallelized protein distance matrix computation with OpenMP.
+ * Implemented parallelized bootstraps computation with OpenMP.
+ * Debugged bootstraps procedure.
+   Adjust 'ijFilter' in 'distance.c' to work with bootstraps.
+   Create a model structure for each thread for protein distances.
+ * Removed  'CompDist.c' 'CompDist.h' 'FastDist.c' 'FastDist.h'.
+ * Added 'T' option for command line to set the number of threads.
+
+2012-11-12	Version 2.09
+ * Debugged 'calcF84' in 'distance.c'.
+   Gamma law was not used when asked for.
+ * Debugged 'Opt_Dist_F' in 'p_optimize.c'.
+   Fix Brent initialization incorrect value.
+ * Implemented parallelized DNA distance matrix computation with OpenMP.
+ * Removed compilation warnings.
+ * Debugged 'loadMatrix' in 'inputs.c'.
+   Check input matrix contains number of taxa on first line.
+ * Debugged 'bionj' in 'BIONJ.c'.
+   Fix output string length problem when branch length has more than 3 digit
+   before comma.
+
+2011-05-28	Version 2.08
+ * Allow gamma law for distance computation for DNA and proteins.
+   Gamma parameter (alpha) is set to 1.
+ * Debugged 'fastme.c'.
+   Rewind to begin of newick string when using input tree and bootstraps.
+ * Added required memory space estimation for NNI/SPR/TBR.
+ * Harmonized CLI and PHYLIP interface behaviour for NNI/SPR/TBR.
+ * Added JC69 model.
+ * Updated ML distance computation for protein in 'p_lk.c'.
+   Do not compute distance when sequences are identical.
+ * Removed fastdist implementation for DNA distance computation.
+   (FastDist.c FastDist.h CompDist.c CompDist.h)
+   Distances are computed using analytic formulae.
+ * Debugged 'makeDistMatrix' and 'ijFilter' in 'distance.c'.
+   Sequence length was not decreased when doing pairwise gap removal.
+ * Debugged 'Read_One_Line_Seq' in 'p_utils.c'.
+ * Removed several compilation warnings:
+   - Ignoring return value of 'scanf', ...
+   - No format string for 'printf', ...
+ * Introduced 3 verbose levels.
+ * Harmonized utilities functions usage through the code:
+   - mCalloc
+   - Message
+   - Warning
+   - Exit
+ * Removed memory leaks.
+
+2008-10-29	Version 2.07
+ * Harmonized models global constants and corresponding functions names.
+ * Set default model to F84 for nucleotides and to LG for amino-acids.
+ * Corected option argument error when choosing SCOREDIST model.
+ * Added 'a' option for command line to append results to output files.
+
+2008-07-18	Version 2.06
+ * Added 'p_bootstrap.c' to finalize bootstraps.
+   (heavily borrowed from PhyML).
+ * Added the boostrap trees output file.
+ * Removed 'print.c' and 'print.h'.
+
+2008-03-10	Version 2.05
+ * Removed 'interface_free.c'.
+ * Added 'p_eigen.c' 'p_lk.c' 'p_models.c' 'p_optimiz.c' 'p_utils.c'.
+   Integrate distance computation from protein alignment
+   (heavily borrowed from PhyML).
+ * Replaced discrete gamma law by continous gamma law.
+
+2007-12-12	Version 2.04
+ * Debugged newick.c.
+ * Added 'BIONJ.c' and 'MVR.c' to implement NJ, BIONJ and UNJ algorithms.
+ * Added 'interface_options.c' 'interface_utilities.c' 'interface_free.c'.
+   To manage:
+   - PHYLIP like interface
+   - Command line interface
+   - Man like usage
+ * Added an extra information file output (_stat.txt).
+ * Formatted the standard and verbose output.
+ * General code structure cleaned, generalization of header files.
+ * Security issue:
+   Replaced unsafety functions (strcpy strcmp sprintf)
+   by their safety equivalent functions (strncpy strncmp snprintf)
+   to avoid buffer overflow.
+
+2007-09-27	Version 2.03
+ * Debugged 'TBR.c'.
+ * Added 'CompDist.c' 'FastDist.c'.
+
+2007-09-21
+ * Written TBR routine.
+
+2007-07-19	Version 2.02
+ * SPR routine is rewritten, fixed, and a bit faster.
+
+2007-07-11	Version 2.01
+ * Added gamma rate variation.
+ * Changed gap filter to be pairwise by default.
+ * Reduced node labels to nine characters at maximum.
+ * Added capability of sequence input to ignore space characters in
+   sequence.
+
+2005-09-01	Version 2.0
+ * New release.
+
+2005-08-01
+ * Finished distance formulae.
+ * Added NJ routine for building initial tree.
+ * Added *.mat score matrices for scoredist routine.
+ * Bootstrapped functionality verified.
+ * Minor change to tree building:
+   Nodes in set 'species' are not used in tree.
+   This change is to allow bootstrapping to repeatedly
+   build multiple trees on the same set of nodes.
+
+2005-07-13	Version 1.5.1
+ * Added more protein formulae.
+
+2004-07-12	Version 1.5
+ * Added SPR functionality.
+
+2004-11-17	Version 1.4.1 
+ * Added ability to handle gapped sequences.
+
+2004-10-6	Version 1.4
+ * Added distance estimation capability from sequence data.
+
+2003-02-28	Version 1.3
+ * Expanded search of bNNI to retest all edges, rather than only edges
+   adjacent to changed edge.
+
+2002-11-19	Version 1.2.1
+ * Fixed parts of newick.c to make it preserve the exact order of the
+   input topology.
+
+2002-10-01	Version 1.2
+ * Added ability to simply assign OLS or balanced weights on an input
+   topology, without doing any NNIs.
+
+2002-09-01	Version 1.1.2
+ * Removed bug in main program in print statement called only in verbose
+   mode.
+
+2002-08-26	Version 1.1.1
+ * Removed bug in 'NNI.c'.
+
+2002-06-06	Version 1.1
+ * Added ability to handled data sets with more than one matrix in an
+   input file, as well as the ability to handle more than one input tree.
+

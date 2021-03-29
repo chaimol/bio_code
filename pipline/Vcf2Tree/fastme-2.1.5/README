@@ -1,0 +1,132 @@
+FastME is a distance based phylogeny reconstruction program that works on distance matrices and, 
+as of v2.0, sequence data.  
+
+
+SYNOPSIS
+	fastme  [-i input data file]  [-u input user tree file]
+	[-o output tree file]  [-O output matrix file]  [-I output information file]
+	[-B output bootstrap trees file]  [-a]
+	[-m method]  [ -D[model] | -P[model] ]  [-r]  [-e]  [-g[alpha]]  [-n[NNI]]  [-s]  [-w branch]
+	[-d datasets]  [-b replicates]  [-z seed]
+	[-c]  [-f precision] [-T number of threads]  [-v]  [-V]  [-h] 
+
+	You can use fastme with no arguments, in this case change the value of
+	a parameter by typing its corresponding character as shown on screen.
+
+OPTIONS
+
+	-i input data file, --input_data=input data file
+		The input data file contains sequence alignment(s)
+		or a distance matrix(ces).
+
+	-u input user tree file, --user_tree=input user tree file
+		FastME may use an existing topology available in the input user tree file
+		which corresponds to the input dataset.
+
+	-o output tree file, --output_tree=output tree file
+		FastME will write the infered tree into the output tree file.
+
+	-O output matrix file, --output_matrix=output matrix file
+		Use this option if you want FastME to write the distances
+		matrix computed from the input alignment in the output matrix file.
+
+	-I output information file, --output_info=output information file
+		Use this option if you want FastME to write information
+		about its execution in the output information file.
+
+	-B output bootstrap trees file, --output_boot=output bootstrap trees file
+		Use this option if you want FastME to write bootstrap trees
+		in the bootstrap trees file.
+
+	-a, --append
+		Use this option to append results to existing output files (if any).
+		By default output files will be overwritten.
+
+	-m method, --method=method
+		FastME computes a tree using a distance algorithm.
+		You may choose this method from:
+		TaxAdd_(B)alME, TaxAdd_(O)LSME, B(I)ONJ (default),
+		(N)J or (U)NJ.
+
+	-d[model], --dna=[model]
+		Use this option if your input data file contains DNA sequences alignment(s).
+		You may also indicate the evolutionary [model] which can be choosen from:
+		(p)-distance, R(Y) symmetric, (R)Y, (J)C69, (K)2P, F8(1), F8(4) (default), (T)N93, (L)ogDet.
+
+	-p[model], --protein=[model]
+		Use this option if your input data file contains protein sequences alignment(s).
+		You may also indicate the evolutionary [model] which can be choosen from:
+		(p)-distance, (F)81 like, (L)G (default), (W)AG, (J)TT, Day(h)off, 
+		(D)CMut, (C)pRev, (M)tREV, (R)tREV, HIV(b), H(I)Vw or FL(U).
+
+	-r, --remove_gap
+		Use this option to completely remove any site which has a gap in
+		any sequence. By default, FastME is doing pairwise deletion of gaps.
+
+	-e, --equilibrium
+		The equilibrium frequencies for DNA are always estimated by counting
+		the occurence of the nucleotides in the input alignment.
+		For amino-acid sequences, the equilibrium frequencies are estimated
+		using the frequencies defined by the substitution model.
+		Use this option if you whish to estimate the amino-acid frequencies
+		by counting their occurence in the input alignment.
+
+	-g[alpha], --gamma=[alpha]
+		Use this option if you wish to have gamma distributed rates across sites.
+		By default, FastME runs with no gamma variation.
+		If running FastME with gamma distributed rates across sites, the [alpha] default value is 1.0.
+		Only helpful when the input data file contains sequences alignment(s).
+
+	-n[NNI], --nni=[NNI]
+		Use this option to do [NNI] tree topology improvement.
+		You may choose the [NNI] type from:
+		NNI_(B)alME (default) or NNI_(O)LS.
+
+	-s, --spr
+		Use this option to do SPR tree topology improvement.
+
+	-w branch, --branch_length=branch
+		Use this option to indicate the branch length to assign to the tree.
+		You may choose the branch length from: (B)alLS (default), (O)LS
+		or (n)one. (n)one is only available with BIONJ, NJ or UNJ.
+		Only helpful when not improving the tree topology (no NNI nor SPR).
+
+	-D datasets, --datasets=datasets
+		Use this option to indicate the number of datasets in your input
+		data file. Default value is 1.
+
+	-b replicates, --bootstrap=replicates
+		Use this option to indicate the number of replicates FastME will
+		do for bootstrapping. Default value is 0.
+		Only helpful when the input data file contains sequences alignment(s).
+
+	-z seed, --seed=seed
+		Use this option to initialize randomization with seed value.
+		Only helpful when bootstrapping.
+
+	-c
+		Use this option if you want FastME only to compute distance matrix.
+		Only helpful when the input data file contains sequences alignment(s).
+
+	-f precision, --precision=number of digits after dot
+		Use this option to set the number of digits after the dot to use on output.
+		Default precision is 12.
+
+	-T number of threads, --nb_threads=number of threads
+		Use this option to set the number of threads to use.
+		Default number of threads is 4.
+
+	-v value, --verbose=value
+		Sets the verbose level to value [0-3].
+		Default value is 0.
+
+	-V, --version
+		Prints the FastME version.
+
+	-h, --help
+		Display this usage.
+
+
+
+
+

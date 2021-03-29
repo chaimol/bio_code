@@ -1,0 +1,240 @@
+#!/bin/bash
+
+#此程序是主程序.
+
+## input ann.vcf ,output 4DTV.vcf
+#### The input vcf must be the vcf after the snpEFF comment.
+function DTv(){
+	if [ $# -lt 3 ];then
+		echo "Usage:Vcf2Tree 4DTv input.vcf output_prefix genome.fa
+		Vcf2Tree 4DTv input.vcf output_prefix genome.fa -vdp
+		Vcf2Tree 4DTv input.vcf output_prefix genome.fa -viq
+		Vcf2Tree 4DTv input.vcf output_prefix genome.fa -vp
+		Vcf2Tree 4DTv input.vcf output_prefix genome.fa -vdf
+		Notes:
+		The input vcf must be the vcf after the snpEFF comment!
+		The length of the material name grouped in vcf must be less than or equal to 10 characters. Characters greater than 10 will be automatically truncated to 10 characters.
+		"
+		exit 1
+	fi
+	input=$1  #input.vcf
+	output=$2  #output file prefix
+	genome=$3   #genome.fa
+	
+	#check the input file is from snpEff
+	cat ${input}|grep -v ^#|head -2000|grep -q synonymous_variant
+	if [ $? -ne 0 ];then
+			echo "Error ,please check the input file!maybe not vcf file or vcf not from snpEFF!"
+			exit 1
+	fi
+
+	calc_4dTv_in_eff_vcf.py ${input} ${output}.4dtv.vcf ${genome}
+	echo "out put the 4DTv vcf file is ${output}.4dtv.vcf"
+	if [ $# -eq 4 ];then
+		case $4 in
+			-vdf|--vcf2Dis_fastme)
+				vcf2Dis_phy ${output}.4dtv.vcf ${output}.4dtv
+				fastme2tree ${output}.4dtv.mat ${output}.4dtv
+			;;
+			-vdp|--vcf2Dis_phylip)
+				vcf2Dis_phy ${output}.4dtv.vcf ${output}.4dtv
+				phylip_dis2tree ${output}.4dtv.mat ${output}.4dtv
+			;;
+			-viq|--vcf2iqtree)
+				iq_Tree ${output}.4dtv.vcf ${output}.4dtv
+			;;
+			-vp|--vcf2phyliptree)
+				phylipTree ${output}.4dtv.vcf ${output}.4dtv
+			;;
+			*)
+			echo "The fifth parameter can only be one of them, -vdf or -vdp or -viq or -vp"
+		esac
+	fi
+}
+
+
+# input vcf , ouput the p_distance.matrix
+## calculate by VCF2Dis
+function vcf2Dis_phy(){
+	if [ $# -lt 2 ];then
+		echo "Usage:Vcf2Tree -vdp input.vcf output_prefix
+		Vcf2Tree --vcf2Dis_phylip input.vcf output_prefix
+		The length of the material name grouped in vcf must be less than or equal to 10 characters. Characters greater than 10 will be automatically truncated to 10 characters."
+		exit 1
+	fi
+	input=$1  #input.vcf
+	output=$2  #output file prefix
+	VCF2Dis -i ${input} -o ${output}.mat
+	echo "build the matrix base p_distance,out file is ${output}.mat"
+}
+
+
+# input p_distance.material,output the tree.
+## base phylip
+function phylip_dis2tree(){
+	if [ $# -lt 2 ];then
+		echo "Usage:Vcf2Tree phylip_dis2tree input.matrix output_prefix
+		The length of the material name grouped in vcf must be less than or equal to 10 characters. Characters greater than 10 will be automatically truncated to 10 characters."
+		exit 1
+	fi
+	input=$1  #input.matrix
+	output=$2  #output file prefix
+	#cat neighbor.par
+	echo "${input}
+Y" >${output}.neighbor.par
+	# cat consense.par
+	echo "${output}.nei.tree
+Y">${output}.consense.par
+	neighbor<${output}.neighbor.par && mv outfile ${output}.nei.out && mv outtree ${output}.nei.tree  &&  \
+	consense<${output}.consense.par && mv outfile ${output}.cons.out && mv outtree ${output}.cons.vdp.tree
+	echo "The last out put Tree is ${output}.cons.vdp.tree"
+}
+
+
+# input p_distance.matrix,output the tree.
+## base fastme
+function fastme2tree(){
+	if [ $# -lt 2 ];then
+		echo "Usage:Vcf2Tree -vdf|--vcf2Dis_fastme input.phy output_prefix
+		"
+		exit 1
+	fi
+	input=$1 #input p_distance.matrix file
+	output=$2 #outfile prefix 
+	fastme -i ${input} -o ${output}.vdf.tree
+	echo "The tree file is ${output}.vdf.tree"
+}
+
+# input vcf,output the tree
+## base iqtree
+function iq_Tree(){
+	if [ $# -lt 2 ];then
+		echo "Usage:Vcf2Tree -viq input.vcf output_prefix
+		Vcf2Tree --vcf2iqtree input.vcf output_prefix
+		"
+		exit 1
+	fi
+	input=$1 #input vcf file
+	output=$2 #outfile prefix 
+	vcf2phylip.py -i ${input} --output-prefix ${output}
+	iqtree -s ${output}.min4.phy -m MFP -bb 1000 -bnni -nt AUTO
+	echo "The tree file is ${output}.min4.phy.contree and ${ouput}.min4.phy.treefile,detail info in ${output}.min4.phy.iqtree"
+}
+
+# input vcf , output tree
+## base phylip
+function phylipTree(){
+	if [ $# -lt 2 ];then
+		echo "Usage:Vcf2Tree -vp input.vcf output_prefix
+		Vcf2Tree -vcf2phyliptree input.vcf output_prefix
+		The calculation speed is very slow！"
+		exit 1
+	fi
+	input=$1 #input vcf file
+	output=$2 #outfile prefix 
+	vcf2phylip.py -i ${input} --output-prefix ${output}
+	bash phylip_tree.sh ${output}.min4.phy ${output}
+	echo "The tree file is ${output}.nei.tree and ${output}.contree."
+}
+
+
+case $1 in
+	-h|--help)
+		echo "Vcf2Tree 
+		Vcf2Tree is a tool to build a phylogenetic tree using SNP.vcf（or 4DTV.vcf）!
+		
+		Usage:
+		-viq|--vcf2iqtree
+		-vdp|--vcf2Dis_phylip
+		-vp|--vcf2phyliptree
+		-vdf|--vcf2Dis_fastme
+		4DTv
+		
+		
+		#get tree by iqtree (run fast，can auto choose the best suitable Model) Highly recommended!!!
+		Vcf2Tree -viq input.vcf output_prefix
+		Vcf2Tree --vcf2iqtree input.vcf output_prefix
+		
+		#get tree by VCF2Dis and phylip (third fast)
+		Vcf2Tree -vdp input.vcf output_prefix
+		Vcf2Tree --vcf2Dis_phylip input.vcf output_prefix
+		
+		#get tree by VCF2Dis and fastme (second fast,Inconsistent with the results constructed by other methods )
+		Vcf2Tree -vdf input.vcf output_prefix
+		Vcf2Tree --vcf2Dis_fastme input.vcf output_prefix
+		
+		#get tree by phylip (slow！but accurate)
+		Vcf2Tree -vp input.vcf output_prefix
+		Vcf2Tree --vcf2phyliptree input.vcf output_prefix
+		
+		# get 4DTV.vcf
+		Vcf2Tree 4DTv input.vcf output_prefix genome.fa
+		
+		# get 4DTV.vcf and tree 
+		Vcf2Tree 4DTv input.vcf output_prefix genome.fa -viq
+		Vcf2Tree 4DTv input.vcf output_prefix genome.fa -vdp
+		Vcf2Tree 4DTv input.vcf output_prefix genome.fa -vp
+		Vcf2Tree 4DTv input.vcf output_prefix genome.fa -vdf
+		
+		demo:
+		Vcf2Tree -viq ${PWD}/demo/50k.vcf 50k
+		Vcf2Tree -vdp ${PWD}/demo/50k.vcf 50k
+		Vcf2Tree -vp ${PWD}/demo/50k.vcf 50k
+		
+		Notes:
+		The output tree file can be visual by :
+		Figtree https://github.com/rambaut/figtree/releases (base Java)
+		ITOL https://itol.embl.de/upload.cgi(online)
+		ggtree https://github.com/YuLab-SMU/ggtree (R packages)
+		
+		"
+		;;
+	-v|--version)
+		echo "Info:
+		version:V0.1
+		Author:Mol Chai
+		Builddate:2021-03-26
+		Email:chaimol@163.com
+		Github=https://www.github.com/chaimol/
+		"
+		;;
+	-vdp|--vcf2Dis_phylip)
+		vcf2Dis_phy $2 $3
+		phylip_dis2tree $3.mat $3
+		;;
+	-viq|--vcf2iqtree)
+		iq_Tree $2 $3
+		;;
+	-vdf|--vcf2Dis_fastme)
+		vcf2Dis_phy $2 $3
+		fastme2tree $3.mat $3
+		;;
+	-vp|--vcf2phyliptree)
+		phylipTree $2 $3
+		;;
+	4DTV|4DTv)
+		if [ $# -lt 4 ];then
+			
+			echo "Usage:
+			#Output 4DTV.vcf
+			Vcf2Tree 4DTV input.vcf output_prefix genome.fa
+			
+			#Output 4DTV.vcf and build Tree
+			Vcf2Tree 4DTV input.vcf output_prefix genome.fa -vdp
+			Vcf2Tree 4DTV input.vcf output_prefix genome.fa -viq
+			Vcf2Tree 4DTV input.vcf output_prefix genome.fa -vdf
+			Vcf2Tree 4DTV input.vcf output_prefix genome.fa -vp
+			"
+			exit 1
+		elif [ $# -eq 4 ];then
+			DTv $2 $3 $4
+		elif [ $# -eq 5 ];then
+			DTv $2 $3 $4 $5
+		else
+			DTv
+		fi
+		;;
+	*)
+		echo "use -h or --help for help!"
+esac
+
