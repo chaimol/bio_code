@@ -9,11 +9,11 @@ input.vcf must vcf,vcf.gz is not support!
 - **output_prefix**  
 - genome.fa (only required when run `4DTv`!)
 # output file
--viq ${output}.min4.phy.contree and ${ouput}.min4.phy.treefile
--vdp ${output}.cons.vdp.tree
--vp ${output}.nei.tree and ${output}.contree
--vdf ${output}.vdf.tree
-4DTv ${output}.4dtv.vcf
++ -viq ${output}.min4.phy.contree and ${ouput}.min4.phy.treefile
++ -vdp ${output}.cons.vdp.tree
++ -vp ${output}.nei.tree and ${output}.contree
++ -vdf ${output}.vdf.tree
++ 4DTv ${output}.4dtv.vcf
 
 # Usage:
 ```
