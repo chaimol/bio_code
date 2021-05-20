@@ -54,7 +54,8 @@ input.vcf must vcf,vcf.gz is not support!
 		ggtree https://github.com/YuLab-SMU/ggtree (R packages)
 ```
 # Require software
-The require software have been put in this packages file.Just run `bash Install.sh`
+**Python3 is required (make sure python3 has been install in your environment!)**
+The other require software have been put in this packages file.Just run `bash Install.sh`
 # Install
 ```
 bash Install.sh
