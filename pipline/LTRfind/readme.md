@@ -97,8 +97,8 @@ GGTTTTCTTTCCTTCACTTAGCTATGGATGGTTTATCTTCATTTGTTATATTGGATACAA
 All the output is the same with [LTR_retriever](https://github.com/oushujun/LTR_retriever).
 For Chinese, there are detail info [links](https://www.jianshu.com/p/ed289822c825) in Chinese.
 # 5. Author & Version
-Build date:2021.06.17
-Last  update: 2021.06.18
-Version: 0.02
-Author: Mol Chai
-Email: chaimol@163.com
+- Build date:2021.06.17
+- Last  update: 2021.06.18
+- Version: 0.02
+- Author: Mol Chai
+- Email: chaimol@163.com
