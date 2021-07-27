@@ -75,6 +75,9 @@ In this example,the cds and protein IDs is "AT3G05780.1",so we must be set the "
 If this example,if the "key" is set to "ID", then the output IDs of Ath.bed will be "transcript:AT1G01010.1" is different with the protein.fa and cds.fa IDs "AT1G01010.1".So this will course Error.
 
 Before each script is run, it will check whether the output file of the previous step exists. So if the output bed format is incorrect, you can manually adjust it and still rename it to the name of the program output. Then run subsequent commands. If the latter step fails, be sure to delete the failed file.
+# Output info
+
+ 
 # Update information
 #### 2021.3.18 release the Version 0.01
 #### 2021.3.19 update the Version to 0.02
