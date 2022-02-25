@@ -33,7 +33,7 @@ else
 	exit 1
 fi
 #第2步，解析json文件
-python3 json2tab.py $PWD/output_${random_str}/${NCBI_json} > $PWD/output_${random_str}/${info_list}
+json2tab.py $PWD/output_${random_str}/${NCBI_json} > $PWD/output_${random_str}/${info_list}
 if [ $? -eq 0 ];then
 	echo "Output tab info in $PWD/output_${random_str}/${info_list}"
 else

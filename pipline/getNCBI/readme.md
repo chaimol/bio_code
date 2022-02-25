@@ -23,6 +23,13 @@ echo "export PATH=$HOME/.aspera/connect/bin:\$PATH" >> ~/.bashrc
 source ~/.bashrc
 ```
 
+# 安装本软件的方法
+```
+chmod 757 getNCBI.bash
+chmod 757 json2tab.py
+echo "export PATH=$PWD:\$PATH" >> ~/.bashrc
+source ~/.bashrc
+```
 
 # 使用方法
 ```

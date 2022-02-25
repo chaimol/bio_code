@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 ##用法：python3 json2tab.py NCBI.json
 #输入文件是ffq输出的json文件
 #输出是"projectID","sampleID","fq_url","size","md5","organism"
