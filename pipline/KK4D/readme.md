@@ -1,7 +1,7 @@
 # Readme.md
 ### this is a pipline for analysis of coline genes,KaKs and 4DTv .
 
-# Here is the early KK4D will no longer be updated and maintained. The latest KK4D will be release in [KK4D github](https://github.com/chaimol/KK4D).
+# Here is the early KK4D will no longer be updated and maintained. The latest KK4D will be release in [KK4D github](https://github.com/chaimol/KK4D.git).
 
 #### It can analysis 2 species or 1 species.
 
